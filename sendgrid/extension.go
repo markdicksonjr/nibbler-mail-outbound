@@ -3,14 +3,13 @@ package sendgrid
 import (
 	"errors"
 	"github.com/markdicksonjr/nibbler"
-	"github.com/markdicksonjr/nibbler/mail/outbound"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )
 
 type Extension struct {
 	nibbler.NoOpExtension
-	outbound.Sender
+	nibbler.MailSender
 
 	apiKey      string
 	initialized bool
@@ -31,7 +30,7 @@ func (s *Extension) Init(app *nibbler.Application) error {
 	return nil
 }
 
-func (s *Extension) SendMail(from *outbound.Email, subject string, to []*outbound.Email, plainTextContent string, htmlContent string) (*outbound.Response, error) {
+func (s *Extension) SendMail(from *nibbler.EmailAddress, subject string, to []*nibbler.EmailAddress, plainTextContent string, htmlContent string) (*nibbler.MailSendResponse, error) {
 	if !s.initialized {
 		return nil, errors.New("send grid extension used for sending without initialization")
 	}
@@ -75,7 +74,7 @@ func (s *Extension) SendMail(from *outbound.Email, subject string, to []*outboun
 	res, err := client.Send(message)
 
 	if res != nil {
-		return &outbound.Response{
+		return &nibbler.MailSendResponse{
 			Body:       res.Body,
 			Headers:    res.Headers,
 			StatusCode: res.StatusCode,

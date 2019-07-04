@@ -4,12 +4,11 @@ import (
 	"errors"
 	"github.com/SparkPost/gosparkpost"
 	"github.com/markdicksonjr/nibbler"
-	"github.com/markdicksonjr/nibbler/mail/outbound"
 )
 
 type Extension struct {
 	nibbler.NoOpExtension
-	outbound.Sender
+	nibbler.MailSender
 
 	apiKey      string
 	initialized bool
@@ -30,7 +29,7 @@ func (s *Extension) Init(app *nibbler.Application) error {
 	return nil
 }
 
-func (s *Extension) SendMail(from *outbound.Email, subject string, to []*outbound.Email, plainTextContent string, htmlContent string) (*outbound.Response, error) {
+func (s *Extension) SendMail(from *nibbler.EmailAddress, subject string, to []*nibbler.EmailAddress, plainTextContent string, htmlContent string) (*nibbler.MailSendResponse, error) {
 	if !s.initialized {
 		return nil, errors.New("sparkpost grid extension used for sending without initialization")
 	}
@@ -65,7 +64,7 @@ func (s *Extension) SendMail(from *outbound.Email, subject string, to []*outboun
 	_, res, err := sp.Send(tx)
 
 	if res != nil {
-		return &outbound.Response{
+		return &nibbler.MailSendResponse{
 			Body:       "", // TODO: res.Body or res.HTTP.Body via Reader interface
 			Headers:    res.HTTP.Header,
 			StatusCode: res.HTTP.StatusCode,

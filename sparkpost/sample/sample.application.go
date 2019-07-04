@@ -2,8 +2,7 @@ package main
 
 import (
 	"github.com/markdicksonjr/nibbler"
-	"github.com/markdicksonjr/nibbler/mail/outbound"
-	"github.com/markdicksonjr/nibbler/mail/outbound/sparkpost"
+	"github.com/markdicksonjr/nibbler-mail-outbound/sparkpost"
 	"log"
 )
 
@@ -27,11 +26,11 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	var toList []*outbound.Email
-	toList = append(toList, &outbound.Email{Address: "mark@example.com", Name: "MD"})
+	var toList []*nibbler.EmailAddress
+	toList = append(toList, &nibbler.EmailAddress{Address: "mark@example.com", Name: "MD"})
 
 	response, err := sparkpostExtension.SendMail(
-		&outbound.Email{Address: "test@example.com", Name: "Example User"},
+		&nibbler.EmailAddress{Address: "test@example.com", Name: "Example User"},
 		"test email",
 		toList,
 		"test plain",

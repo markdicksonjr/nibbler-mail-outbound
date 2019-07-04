@@ -2,8 +2,7 @@ package main
 
 import (
 	"github.com/markdicksonjr/nibbler"
-	"github.com/markdicksonjr/nibbler/mail/outbound"
-	NibSendGrid "github.com/markdicksonjr/nibbler/mail/outbound/sendgrid"
+	"github.com/markdicksonjr/nibbler-mail-outbound/sendgrid"
 	"log"
 )
 
@@ -17,7 +16,7 @@ func main() {
 	}
 
 	// allocate the sendgrid extension
-	sendgridExtension := NibSendGrid.Extension{}
+	sendgridExtension := sendgrid.Extension{}
 
 	// initialize the application, provide config, logger, extensions
 	app := nibbler.Application{}
@@ -27,11 +26,11 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	var toList []*outbound.Email
-	toList = append(toList, &outbound.Email{Address: "mark@example.com", Name: "MD"})
+	var toList []*nibbler.EmailAddress
+	toList = append(toList, &nibbler.EmailAddress{Address: "mark@example.com", Name: "MD"})
 
 	response, err := sendgridExtension.SendMail(
-		&outbound.Email{Address: "test@example.com", Name: "Example User"},
+		&nibbler.EmailAddress{Address: "test@example.com", Name: "Example User"},
 		"test email",
 		toList,
 		"test plain",
