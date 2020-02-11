@@ -16,11 +16,11 @@ type Extension struct {
 }
 
 func (s *Extension) Init(app *nibbler.Application) error {
-	if app.GetConfiguration() == nil || app.GetConfiguration().Raw == nil {
+	if app.Config == nil || app.Config.Raw == nil {
 		return errors.New("sendgrid extension could not get app config")
 	}
 
-	s.apiKey = app.GetConfiguration().Raw.Get("sendgrid", "api", "key").String("")
+	s.apiKey = app.Config.Raw.Get("sendgrid", "api", "key").String("")
 
 	if len(s.apiKey) == 0 {
 		return errors.New("sendgrid extension could not get API key")
@@ -82,4 +82,8 @@ func (s *Extension) SendMail(from *nibbler.EmailAddress, subject string, to []*n
 	}
 
 	return nil, err
+}
+
+func (s *Extension) GetName() string {
+	return "sendgrid"
 }
